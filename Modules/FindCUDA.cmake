@@ -41,21 +41,25 @@
 #      nvcc in the generated source.  If you compile to PTX and then load the
 #      file yourself, you can mix bit sizes between device and host.
 #
-#   CUDA_ARCH_NAME (Default is "Auto" for regular builds and "Manual" for cross-builds)
-#   -- Set to the desired CUDA architecture name, one of CUDA_KNOWN_GPU_ARCH_NAMES list:
-#      "Fermi" "Kepler" "Maxwell" "All" "Common" "Manual" "Auto"
-#       Also, for CUDA version 6.5+: "Kepler+Tegra" "Kepler+Tesla" "Maxwell+Tegra"
-#       Also, for CUDA version  7.5: "Pascal".
-#       More information: https://en.wikipedia.org/wiki/CUDA
+#   ENV{CUDA_SELECT_NVCC_ARCH_TARGETS} (Default is "Auto")
+#   -- Controls the way CUDA_SELECT_NVCC_ARCH_FLAGS function selects NVCC
+#      compute architecture flags.
+#      "Auto" detects local machine GPU compute arch at runtime.
+#      "Common" and "All" cover common and entire subsets of GPU architectures.
+#      Otherwise, CUDA_SELECT_NVCC_ARCH_FLAGS returns NVCC flags accordingly
+#      to the list of GPU architectures in CUDA_SELECT_NVCC_ARCH_TARGETS
+#      Possible values(semicolon or space separated):
+#      Fermi Kepler Maxwell Kepler+Tegra Kepler+Tesla Maxwell+Tegra Pascal
+#      2.0 2.1(2.0) 3.0 3.2 3.5 3.7 5.0 5.2 5.3 6.0 6.2
 #
-#   ENV{CUDA_ARCH_BIN} (Only tested if CUDA_ARCH_NAME set to "Manual")
-#   -- Set CUDA_ARCH_NAME to "Manual" and
-#      CUDA_ARCH_BIN to desired subset of CUDA_KNOWN_GPU_ARCHITECTURES list below.
+#      More information: https://en.wikipedia.org/wiki/CUDA
+#
 #
 #   CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE (Default ON)
 #   -- Set to ON if you want the custom build rule to be attached to the source
 #      file in Visual Studio.  Turn OFF if you add the same cuda file to multiple
 #      targets.
+#
 #
 #      This allows the user to build the target from the CUDA file; however, bad
 #      things can happen if the CUDA source file is added to multiple targets.
@@ -198,6 +202,7 @@
 #      (e.g. nvcc -Ipath0 -Ipath1 ... ). These paths usually contain other .cu
 #      files.
 #
+#
 #   CUDA_LINK_SEPARABLE_COMPILATION_OBJECTS( output_file_var cuda_target
 #                                            nvcc_flags object_files)
 #   -- Generates the link object required by separable compilation from the given
@@ -210,7 +215,7 @@
 #      instead of a macro.
 #
 #   CUDA_SELECT_NVCC_ARCH_FLAGS(out_variable)
-#   -- Selects GPU arch flags for nvcc based on CUDA_ARCH_NAME.
+#   -- Selects GPU arch flags for nvcc based on ENV[CUDA_SELECT_NVCC_ARCH_TARGETS].
 #      Usage: CUDA_SELECT_NVCC_ARCH_FLAGS(NVCC_FLAGS_EXTRA)
 #             LIST(APPEND CUDA_NVCC_FLAGS ${NVCC_FLAGS_EXTRA})
 #      Note that this is a function instead of a macro.
@@ -323,19 +328,8 @@
 #   CUDA_nvcuvid_LIBRARY  -- CUDA Video Decoder library.
 #                            Only available for CUDA version 3.2+.
 #                            Windows only.
-#   CUDA_KNOWN_GPU_ARCH_NAMES      -- "Fermi" "Kepler" "Maxwell" "All" "Common" "Manual" "Auto"
-#   Also, for CUDA version 6.5+    -- "Kepler+Tegra" "Kepler+Tesla" "Maxwell+Tegra"
-#   Also, for CUDA version  7.5+   -- "Pascal"
-#   "Auto" -- option is the default for non-cross compilation. It determines the GPU(s) installed
-#             on the machine and produces options for that architecture(s) only.
-#   "Manual" -- default for cross-compilaton. CUDA_ARCH_BIN has to be set.
-#   "Common" -- Fallback default when "Auto" fails to determine machine's GPU compute capabilities.
-#               In this case, most common Desktop CUDA compute capabilities are used.
-#   "All"    -- Builds for all CUDA_KNOWN_GPU_ARCH_NAMES and should rarely be used.
-#   CUDA_KNOWN_GPU_ARCHITECTURES   -- "2.0" "2.1(2.0)" "3.0" "3.5" "5.0"
-#   Also, for CUDA version  6.5+   -- "3.2" "3.7" "5.2" "5.3"
-#   Also, for CUDA version  7.5+   -- "6.0" "6.2"
 #
+
 #
 #   James Bigler, NVIDIA Corp (nvidia.com - jbigler)
 #   Abe Stephens, SCI Institute -- http://www.sci.utah.edu/~abe/FindCuda.html
@@ -998,9 +992,7 @@ set(CUDA_SDK_ROOT_DIR_INTERNAL "${CUDA_SDK_ROOT_DIR}" CACHE INTERNAL
   "This is the value of the last time CUDA_SDK_ROOT_DIR was set successfully." FORCE)
 
 #include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
-#this change is only needed if this file is used standalone. Please revert on PR merge.
 include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
-
 
 find_package_handle_standard_args(CUDA
   REQUIRED_VARS
