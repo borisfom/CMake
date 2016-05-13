@@ -726,8 +726,10 @@ mark_as_advanced(CUDA_TOOLKIT_INCLUDE)
 
 
 if (CUDA_VERSION VERSION_GREATER "7.0" OR EXISTS("${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h"))
+    MESSAGE ("FOUND ${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h")
     set(CUDA_HAS_FP16 true CACHE BOOL "CUDA has half-float support")
 else()
+    MESSAGE ("NOT FOUND ${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h")
     set(CUDA_HAS_FP16 false CACHE BOOL "CUDA has half-float support")
 endif()
 
