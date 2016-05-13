@@ -725,12 +725,24 @@ find_path(CUDA_TOOLKIT_INCLUDE device_functions.h)
 mark_as_advanced(CUDA_TOOLKIT_INCLUDE)
 
 
-if (CUDA_VERSION VERSION_GREATER "7.0" OR EXISTS("${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h"))
-    MESSAGE ("FOUND ${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h")
-    set(CUDA_HAS_FP16 true CACHE BOOL "CUDA has half-float support")
+if (CUDA_VERSION VERSION_GREATER "7.0")
+  set(cuda_fp16_found ${CUDA_TOOLKIT_INCLUDE})
 else()
-    MESSAGE ("NOT FOUND ${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h")
-    set(CUDA_HAS_FP16 false CACHE BOOL "CUDA has half-float support")
+  find_path( cuda_fp16_found
+    cuda_fp16.h # Header included in toolkit
+    PATHS ${CUDA_TOOLKIT_INCLUDE}
+    ENV CUDA_PATH
+    ENV CUDA_INC_PATH
+    NO_DEFAULT_PATH
+    )
+endif()
+
+
+if (cuda_fp16_found)
+  set(CUDA_HAS_FP16 true CACHE BOOL "CUDA has half-float support")
+else()
+  MESSAGE ("NOT FOUND ${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h")
+  set(CUDA_HAS_FP16 false CACHE BOOL "CUDA has half-float support")
 endif()
 
 # Set the user list of include dir to nothing to initialize it.
