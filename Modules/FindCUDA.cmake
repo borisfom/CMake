@@ -724,6 +724,10 @@ find_path(CUDA_TOOLKIT_INCLUDE
 find_path(CUDA_TOOLKIT_INCLUDE device_functions.h)
 mark_as_advanced(CUDA_TOOLKIT_INCLUDE)
 
+SET(CUDA_HAS_FP16
+  CUDA_VERSION VERSION_GREATER "7.0" OR EXISTS("${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h")
+  CACHE BOOL "CUDA has half-float support")
+
 # Set the user list of include dir to nothing to initialize it.
 set (CUDA_NVCC_INCLUDE_ARGS_USER "")
 set (CUDA_INCLUDE_DIRS ${CUDA_TOOLKIT_INCLUDE})
