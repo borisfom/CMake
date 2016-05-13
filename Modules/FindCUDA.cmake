@@ -725,7 +725,7 @@ find_path(CUDA_TOOLKIT_INCLUDE device_functions.h)
 mark_as_advanced(CUDA_TOOLKIT_INCLUDE)
 
 
-if (CUDA_VERSION VERSION_GREATER "7.0" OR EXISTS("${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h")
+if (CUDA_VERSION VERSION_GREATER "7.0" OR EXISTS("${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h"))
     SET(CUDA_HAS_FP16 TRUE CACHE BOOL "CUDA has half-float support")
 else()
     SET(CUDA_HAS_FP16 FALSE CACHE BOOL "CUDA has half-float support")
