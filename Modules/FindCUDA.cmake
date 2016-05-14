@@ -214,12 +214,10 @@
 #      specified by CUDA_64_BIT_DEVICE_CODE.  Note that this is a function
 #      instead of a macro.
 #
-#   CUDA_SELECT_NVCC_ARCH_FLAGS(out_variable)
-#   -- Selects GPU arch flags for nvcc based on ENV[CUDA_SELECT_NVCC_ARCH_TARGETS].
-#      Usage: CUDA_SELECT_NVCC_ARCH_FLAGS(NVCC_FLAGS_EXTRA)
-#             LIST(APPEND CUDA_NVCC_FLAGS ${NVCC_FLAGS_EXTRA})
+#   CUDA_SELECT_NVCC_ARCH_FLAGS(out_variable [list of CUDA compute archs])
+#   -- Selects GPU arch flags for nvcc based on CUDA architectures from parameter list
+#      or $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS} if no list
 #      Note that this is a function instead of a macro.
-#
 #
 #   CUDA_WRAP_SRCS ( cuda_target format generated_files file0 file1 ...
 #                    [STATIC | SHARED | MODULE] [OPTIONS ...] )

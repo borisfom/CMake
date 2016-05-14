@@ -1,13 +1,11 @@
 # Synopsis:
-# Function for selecting GPU arch flags for nvcc based on CUDA_ARCH_NAME
+# Function for selecting GPU arch flags for nvcc based on CUDA architectures from parameter list
+# or $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS} if no list
 # Usage:
-#   CUDA_SELECT_NVCC_ARCH_FLAGS(out_variable)
+#   SELECT_NVCC_ARCH_FLAGS(out_variable [list of CUDA compute archs])
 #
 # Variables affecting the choice:
-#
-# CUDA_ARCH_NAME: One of CUDA_KNOWN_GPU_ARCH_NAMES list below.
-# ENV{CUDA_ARCH_BIN} : Only tested if CUDA_ARCH_NAME set to "Manual".
-#                      CUDA_ARCH_BIN entries have to be from CUDA_KNOWN_GPU_ARCHITECTURES list
+# $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS}
 #
 #
 
@@ -77,12 +75,13 @@ endfunction()
 
 
 ################################################################################################
-# Function for selecting GPU arch flags for nvcc based on CUDA_ARCH_NAME
+# Function for selecting GPU arch flags for nvcc based on CUDA architectures from parameter list
+# or $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS} if no list
 # Usage:
-#   SELECT_NVCC_ARCH_FLAGS(out_variable)
-function(CUDA_SELECT_NVCC_ARCH_FLAGS out_variable)
+#   SELECT_NVCC_ARCH_FLAGS(out_variable [list of CUDA compute archs])
+function(CUDA_SELECT_NVCC_ARCH_FLAGS out_variable $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS})
   # Allow a user to specify architecture from env
-  set(CUDA_ARCH_LIST $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS})
+  set(CUDA_ARCH_LIST "${ARGN}")
 
   if("X${CUDA_ARCH_LIST}" STREQUAL "X" )
     set(CUDA_ARCH_LIST "Auto")
