@@ -722,21 +722,7 @@ find_path(CUDA_TOOLKIT_INCLUDE
 find_path(CUDA_TOOLKIT_INCLUDE device_functions.h)
 mark_as_advanced(CUDA_TOOLKIT_INCLUDE)
 
-
-if (CUDA_VERSION VERSION_GREATER "7.0")
-  set(cuda_fp16_found ${CUDA_TOOLKIT_INCLUDE})
-else()
-  find_path( cuda_fp16_found
-    cuda_fp16.h # Header included in toolkit
-    PATHS ${CUDA_TOOLKIT_INCLUDE}
-    ENV CUDA_PATH
-    ENV CUDA_INC_PATH
-    NO_DEFAULT_PATH
-    )
-endif()
-
-
-if (cuda_fp16_found)
+if (EXISTS("${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h") OR CUDA_VERSION VERSION_GREATER "7.0")
   set(CUDA_HAS_FP16 true CACHE BOOL "CUDA has half-float support")
 else()
   MESSAGE ("NOT FOUND ${CUDA_TOOLKIT_INCLUDE}/cuda_fp16.h")
