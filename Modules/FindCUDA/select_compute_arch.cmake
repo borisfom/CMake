@@ -1,16 +1,8 @@
 # Synopsis:
-# Function for selecting GPU arch flags for nvcc based on CUDA architectures from parameter list
-# or $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS} if no list
-# Usage:
-#   SELECT_NVCC_ARCH_FLAGS(out_variable [list of CUDA compute archs])
+#   CUDA_SELECT_NVCC_ARCH_FLAGS(out_variable [list of target CUDA architectures])
+#   -- Selects GPU arch flags for nvcc based on target CUDA architectures list
+#      More information on CUDA architectures: https://en.wikipedia.org/wiki/CUDA
 #
-# Variables affecting the choice:
-# $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS}
-#
-#
-
-# NVIDIA GPU achitectures:
-# https://en.wikipedia.org/wiki/CUDA
 
 # This list will be used for CUDA_ARCH_NAME = All option
 set(CUDA_KNOWN_GPU_ARCHITECTURES  "Fermi" "Kepler" "Maxwell" "2.0" "2.1(2.0)" "3.0" "3.5" "5.0")
@@ -76,16 +68,10 @@ endfunction()
 
 ################################################################################################
 # Function for selecting GPU arch flags for nvcc based on CUDA architectures from parameter list
-# or $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS} if no list
 # Usage:
 #   SELECT_NVCC_ARCH_FLAGS(out_variable [list of CUDA compute archs])
 function(CUDA_SELECT_NVCC_ARCH_FLAGS out_variable)
-  # Allow a user to specify architecture from env
-  if(${ARGC} EQUAL 1)
-    set(CUDA_ARCH_LIST "$ENV{CUDA_SELECT_NVCC_ARCH_TARGETS}")
-  else()
-    set(CUDA_ARCH_LIST "${ARGN}")
-  endif()
+  set(CUDA_ARCH_LIST "${ARGN}")
 
   if("X${CUDA_ARCH_LIST}" STREQUAL "X" )
     set(CUDA_ARCH_LIST "Auto")

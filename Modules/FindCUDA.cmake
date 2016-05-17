@@ -41,20 +41,6 @@
 #      nvcc in the generated source.  If you compile to PTX and then load the
 #      file yourself, you can mix bit sizes between device and host.
 #
-#   ENV{CUDA_SELECT_NVCC_ARCH_TARGETS} (Default is "Auto")
-#   -- Controls the way CUDA_SELECT_NVCC_ARCH_FLAGS function selects NVCC
-#      compute architecture flags.
-#      "Auto" detects local machine GPU compute arch at runtime.
-#      "Common" and "All" cover common and entire subsets of GPU architectures.
-#      Otherwise, CUDA_SELECT_NVCC_ARCH_FLAGS returns NVCC flags accordingly
-#      to the list of GPU architectures in CUDA_SELECT_NVCC_ARCH_TARGETS
-#      Possible values(semicolon or space separated):
-#      Fermi Kepler Maxwell Kepler+Tegra Kepler+Tesla Maxwell+Tegra Pascal
-#      2.0 2.1(2.0) 3.0 3.2 3.5 3.7 5.0 5.2 5.3 6.0 6.2
-#
-#      More information: https://en.wikipedia.org/wiki/CUDA
-#
-#
 #   CUDA_ATTACH_VS_BUILD_RULE_TO_CUDA_FILE (Default ON)
 #   -- Set to ON if you want the custom build rule to be attached to the source
 #      file in Visual Studio.  Turn OFF if you add the same cuda file to multiple
@@ -214,9 +200,16 @@
 #      specified by CUDA_64_BIT_DEVICE_CODE.  Note that this is a function
 #      instead of a macro.
 #
-#   CUDA_SELECT_NVCC_ARCH_FLAGS(out_variable [list of CUDA compute archs])
-#   -- Selects GPU arch flags for nvcc based on CUDA architectures from parameter list
-#      or $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS} if no list
+#   CUDA_SELECT_NVCC_ARCH_FLAGS(out_variable [list of target CUDA architectures])
+#   -- Selects GPU arch flags for nvcc based on target CUDA architectures list
+#      (Default is "Auto" if no list)
+#      Possible list values(semicolon or space separated):
+#       - "Auto" detects local machine GPU compute arch at runtime.
+#       - "Common" and "All" cover common and entire subsets of GPU architectures
+#      The above three cannot be combined in a list, only those below can be:
+#       - Fermi Kepler Maxwell Kepler+Tegra Kepler+Tesla Maxwell+Tegra Pascal
+#       - 2.0 2.1(2.0) 3.0 3.2 3.5 3.7 5.0 5.2 5.3 6.0 6.2
+#      More information on CUDA architectures: https://en.wikipedia.org/wiki/CUDA
 #      Note that this is a function instead of a macro.
 #
 #   CUDA_WRAP_SRCS ( cuda_target format generated_files file0 file1 ...
