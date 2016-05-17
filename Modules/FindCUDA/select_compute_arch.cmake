@@ -82,7 +82,7 @@ endfunction()
 function(CUDA_SELECT_NVCC_ARCH_FLAGS out_variable)
   # Allow a user to specify architecture from env
   list(LENGTH ${ARGN} opt_args)
-  if(${opt_args} EQUAL 0)
+  if(${opt_args} EQUAL 1)
     set(CUDA_ARCH_LIST "$ENV{CUDA_SELECT_NVCC_ARCH_TARGETS}")
   else()
     set(CUDA_ARCH_LIST "${ARGN}")
