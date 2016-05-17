@@ -79,9 +79,14 @@ endfunction()
 # or $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS} if no list
 # Usage:
 #   SELECT_NVCC_ARCH_FLAGS(out_variable [list of CUDA compute archs])
-function(CUDA_SELECT_NVCC_ARCH_FLAGS out_variable $ENV{CUDA_SELECT_NVCC_ARCH_TARGETS})
+function(CUDA_SELECT_NVCC_ARCH_FLAGS out_variable)
   # Allow a user to specify architecture from env
-  set(CUDA_ARCH_LIST "${ARGN}")
+  list(LENGTH ${ARGN} opt_args)
+  if(${opt_args} EQUAL 0)
+    set(CUDA_ARCH_LIST "$ENV{CUDA_SELECT_NVCC_ARCH_TARGETS}")
+  else()
+    set(CUDA_ARCH_LIST "${ARGN}")
+  endif()
 
   if("X${CUDA_ARCH_LIST}" STREQUAL "X" )
     set(CUDA_ARCH_LIST "Auto")
