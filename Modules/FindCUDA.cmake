@@ -46,7 +46,6 @@
 #      file in Visual Studio.  Turn OFF if you add the same cuda file to multiple
 #      targets.
 #
-#
 #      This allows the user to build the target from the CUDA file; however, bad
 #      things can happen if the CUDA source file is added to multiple targets.
 #      When performing parallel builds it is possible for the custom build
@@ -328,7 +327,6 @@
 #                            Windows only.
 #
 
-#
 #   James Bigler, NVIDIA Corp (nvidia.com - jbigler)
 #   Abe Stephens, SCI Institute -- http://www.sci.utah.edu/~abe/FindCuda.html
 #
@@ -364,6 +362,11 @@
 ###############################################################################
 
 # FindCUDA.cmake
+
+# We need to have at least this version to support the VERSION_LESS argument to 'if' (2.6.2) and unset (2.6.3)
+cmake_policy(PUSH)
+cmake_minimum_required(VERSION 2.6.3)
+cmake_policy(POP)
 
 # This macro helps us find the location of helper files we will need the full path to
 macro(CUDA_FIND_HELPER_FILE _name _extension)
@@ -789,8 +792,10 @@ endif()
 if(CUDA_cudart_static_LIBRARY)
   # Set whether to use the static cuda runtime.
   option(CUDA_USE_STATIC_CUDA_RUNTIME "Use the static version of the CUDA runtime library if available" ON)
+  set(CUDA_CUDART_LIBRARY_VAR CUDA_cudart_static_LIBRARY)
 else()
   option(CUDA_USE_STATIC_CUDA_RUNTIME "Use the static version of the CUDA runtime library if available" OFF)
+  set(CUDA_CUDART_LIBRARY_VAR CUDA_CUDART_LIBRARY)
 endif()
 
 if(CUDA_USE_STATIC_CUDA_RUNTIME)
@@ -998,14 +1003,15 @@ set(CUDA_TOOLKIT_TARGET_DIR_INTERNAL "${CUDA_TOOLKIT_TARGET_DIR}" CACHE INTERNAL
 set(CUDA_SDK_ROOT_DIR_INTERNAL "${CUDA_SDK_ROOT_DIR}" CACHE INTERNAL
   "This is the value of the last time CUDA_SDK_ROOT_DIR was set successfully." FORCE)
 
-include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+#include(${CMAKE_CURRENT_LIST_DIR}/FindPackageHandleStandardArgs.cmake)
+include(${CMAKE_ROOT}/Modules/FindPackageHandleStandardArgs.cmake)
 
 find_package_handle_standard_args(CUDA
   REQUIRED_VARS
     CUDA_TOOLKIT_ROOT_DIR
     CUDA_NVCC_EXECUTABLE
     CUDA_INCLUDE_DIRS
-    CUDA_CUDART_LIBRARY
+    ${CUDA_CUDART_LIBRARY_VAR}
   VERSION_VAR
     CUDA_VERSION
   )
@@ -1443,8 +1449,7 @@ macro(CUDA_WRAP_SRCS cuda_target format generated_files)
       set(cmake_dependency_file "${cuda_compile_intermediate_directory}/${generated_file_basename}.depend")
       set(NVCC_generated_dependency_file "${cuda_compile_intermediate_directory}/${generated_file_basename}.NVCC-depend")
       set(generated_cubin_file "${generated_file_path}/${generated_file_basename}.cubin.txt")
-      set(custom_target_script_pregen "${cuda_compile_intermediate_directory}/${generated_file_basename}.cmake.pre-gen")
-      set(custom_target_script "${cuda_compile_intermediate_directory}/${generated_file_basename}$<$<BOOL:$<CONFIG>>:.$<CONFIG>>.cmake")
+      set(custom_target_script "${cuda_compile_intermediate_directory}/${generated_file_basename}.cmake")
 
       # Setup properties for obj files:
       if( NOT cuda_compile_to_external_module )
@@ -1485,11 +1490,8 @@ macro(CUDA_WRAP_SRCS cuda_target format generated_files)
       endif()
 
       # Configure the build script
-      configure_file("${CUDA_run_nvcc}" "${custom_target_script_pregen}" @ONLY)
-      file(GENERATE
-        OUTPUT "${custom_target_script}"
-        INPUT "${custom_target_script_pregen}"
-        )
+      configure_file("${CUDA_run_nvcc}" "${custom_target_script}" @ONLY)
+
 
       # So if a user specifies the same cuda file as input more than once, you
       # can have bad things happen with dependencies.  Here we check an option
@@ -1524,8 +1526,8 @@ macro(CUDA_WRAP_SRCS cuda_target format generated_files)
       # Build the generated file and dependency file ##########################
       add_custom_command(
         OUTPUT ${generated_file}
-        ${main_dep}
         # These output files depend on the source_file and the contents of cmake_dependency_file
+        ${main_dep}
         DEPENDS ${CUDA_NVCC_DEPEND}
         DEPENDS ${custom_target_script}
         # Make sure the output directory exists before trying to write to it.
