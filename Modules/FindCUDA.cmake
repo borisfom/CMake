@@ -46,7 +46,6 @@
 #      file in Visual Studio.  Turn OFF if you add the same cuda file to multiple
 #      targets.
 #
-#
 #      This allows the user to build the target from the CUDA file; however, bad
 #      things can happen if the CUDA source file is added to multiple targets.
 #      When performing parallel builds it is possible for the custom build
@@ -328,7 +327,6 @@
 #                            Windows only.
 #
 
-#
 #   James Bigler, NVIDIA Corp (nvidia.com - jbigler)
 #   Abe Stephens, SCI Institute -- http://www.sci.utah.edu/~abe/FindCuda.html
 #
@@ -789,8 +787,10 @@ endif()
 if(CUDA_cudart_static_LIBRARY)
   # Set whether to use the static cuda runtime.
   option(CUDA_USE_STATIC_CUDA_RUNTIME "Use the static version of the CUDA runtime library if available" ON)
+  set(CUDA_CUDART_LIBRARY_VAR CUDA_cudart_static_LIBRARY)
 else()
   option(CUDA_USE_STATIC_CUDA_RUNTIME "Use the static version of the CUDA runtime library if available" OFF)
+  set(CUDA_CUDART_LIBRARY_VAR CUDA_CUDART_LIBRARY)
 endif()
 
 if(CUDA_USE_STATIC_CUDA_RUNTIME)
@@ -1006,7 +1006,7 @@ find_package_handle_standard_args(CUDA
     CUDA_TOOLKIT_ROOT_DIR
     CUDA_NVCC_EXECUTABLE
     CUDA_INCLUDE_DIRS
-    CUDA_CUDART_LIBRARY
+    ${CUDA_CUDART_LIBRARY_VAR}
   VERSION_VAR
     CUDA_VERSION
   )
@@ -1525,8 +1525,8 @@ macro(CUDA_WRAP_SRCS cuda_target format generated_files)
       # Build the generated file and dependency file ##########################
       add_custom_command(
         OUTPUT ${generated_file}
-        ${main_dep}
         # These output files depend on the source_file and the contents of cmake_dependency_file
+        ${main_dep}
         DEPENDS ${CUDA_NVCC_DEPEND}
         DEPENDS ${custom_target_script}
         # Make sure the output directory exists before trying to write to it.
