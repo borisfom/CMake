@@ -89,6 +89,7 @@ All Modules
    /module/FindCABLE
    /module/FindCoin3D
    /module/FindCUDA
+   /module/FindCUDNN
    /module/FindCups
    /module/FindCURL
    /module/FindCurses
