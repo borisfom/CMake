@@ -750,6 +750,10 @@ bool cmGlobalVisualStudioGenerator::TargetIsCSharpOnly(
     if (!gt->GetConfigCommonSourceFiles(sources)) {
       return false;
     }
+    // Only "real" targets are allowed to be C# targets.
+    if (gt->Target->GetType() > cmStateEnums::OBJECT_LIBRARY) {
+      return false;
+    }
   }
   gt->GetLanguages(languages, "");
   if (languages.size() == 1) {
@@ -810,10 +814,14 @@ void cmGlobalVisualStudioGenerator::AddSymbolExportCommand(
   cmGeneratorTarget* gt, std::vector<cmCustomCommand>& commands,
   std::string const& configName)
 {
+  cmGeneratorTarget::ModuleDefinitionInfo const* mdi =
+    gt->GetModuleDefinitionInfo(configName);
+  if (!mdi || !mdi->WindowsExportAllSymbols) {
+    return;
+  }
+
   std::vector<std::string> outputs;
-  std::string deffile = gt->ObjectDirectory;
-  deffile += "/exportall.def";
-  outputs.push_back(deffile);
+  outputs.push_back(mdi->DefFile);
   std::vector<std::string> empty;
   std::vector<cmSourceFile const*> objectSources;
   gt->GetObjectSources(objectSources, configName);
@@ -831,7 +839,7 @@ void cmGlobalVisualStudioGenerator::AddSymbolExportCommand(
   cmdl.push_back(cmakeCommand);
   cmdl.push_back("-E");
   cmdl.push_back("__create_def");
-  cmdl.push_back(deffile);
+  cmdl.push_back(mdi->DefFile);
   std::string obj_dir_expanded = obj_dir;
   cmSystemTools::ReplaceString(obj_dir_expanded, this->GetCMakeCFGIntDir(),
                                configName.c_str());

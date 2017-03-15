@@ -26,6 +26,7 @@ Properties of Global Scope
    /prop_gbl/ENABLED_LANGUAGES
    /prop_gbl/FIND_LIBRARY_USE_LIB32_PATHS
    /prop_gbl/FIND_LIBRARY_USE_LIB64_PATHS
+   /prop_gbl/FIND_LIBRARY_USE_LIBX32_PATHS
    /prop_gbl/FIND_LIBRARY_USE_OPENBSD_VERSIONING
    /prop_gbl/GLOBAL_DEPENDS_DEBUG_MODE
    /prop_gbl/GLOBAL_DEPENDS_NO_CYCLES
@@ -45,7 +46,6 @@ Properties of Global Scope
    /prop_gbl/TARGET_SUPPORTS_SHARED_LIBS
    /prop_gbl/USE_FOLDERS
    /prop_gbl/XCODE_EMIT_EFFECTIVE_PLATFORM_NAME
-   /prop_gbl/XCODE_GENERATE_SCHEME
 
 .. _`Directory Properties`:
 
@@ -121,6 +121,7 @@ Properties on Targets
    /prop_tgt/AUTOMOC
    /prop_tgt/AUTOUIC
    /prop_tgt/AUTOUIC_OPTIONS
+   /prop_tgt/AUTOUIC_SEARCH_PATHS
    /prop_tgt/AUTORCC
    /prop_tgt/AUTORCC_OPTIONS
    /prop_tgt/BINARY_DIR
@@ -369,6 +370,7 @@ Properties on Source Files
    /prop_sf/SKIP_AUTOUIC
    /prop_sf/SYMBOLIC
    /prop_sf/VS_COPY_TO_OUT_DIR
+   /prop_sf/VS_CSHARP_tagname
    /prop_sf/VS_DEPLOYMENT_CONTENT
    /prop_sf/VS_DEPLOYMENT_LOCATION
    /prop_sf/VS_INCLUDE_IN_VSIX

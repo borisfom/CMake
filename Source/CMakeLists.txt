@@ -344,6 +344,8 @@ set(SRCS
   cmPropertyDefinitionMap.h
   cmPropertyMap.cxx
   cmPropertyMap.h
+  cmQtAutoGeneratorCommon.cxx
+  cmQtAutoGeneratorCommon.h
   cmQtAutoGeneratorInitializer.cxx
   cmQtAutoGeneratorInitializer.h
   cmQtAutoGenerators.cxx
@@ -381,6 +383,8 @@ set(SRCS
   cmVariableWatch.h
   cmVersion.cxx
   cmVersion.h
+  cmWorkingDirectory.cxx
+  cmWorkingDirectory.h
   cmXMLParser.cxx
   cmXMLParser.h
   cmXMLSafe.cxx

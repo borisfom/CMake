@@ -230,6 +230,7 @@ cmTarget::cmTarget(std::string const& name, cmStateEnums::TargetType type,
     this->SetPropertyDefault("INSTALL_NAME_DIR", CM_NULLPTR);
     this->SetPropertyDefault("INSTALL_RPATH", "");
     this->SetPropertyDefault("INSTALL_RPATH_USE_LINK_PATH", "OFF");
+    this->SetPropertyDefault("INTERPROCEDURAL_OPTIMIZATION", CM_NULLPTR);
     this->SetPropertyDefault("SKIP_BUILD_RPATH", "OFF");
     this->SetPropertyDefault("BUILD_WITH_INSTALL_RPATH", "OFF");
     this->SetPropertyDefault("ARCHIVE_OUTPUT_DIRECTORY", CM_NULLPTR);
@@ -248,6 +249,7 @@ cmTarget::cmTarget(std::string const& name, cmStateEnums::TargetType type,
     this->SetPropertyDefault("AUTOMOC_DEPEND_FILTERS", CM_NULLPTR);
     this->SetPropertyDefault("AUTOMOC_MOC_OPTIONS", CM_NULLPTR);
     this->SetPropertyDefault("AUTOUIC_OPTIONS", CM_NULLPTR);
+    this->SetPropertyDefault("AUTOUIC_SEARCH_PATHS", CM_NULLPTR);
     this->SetPropertyDefault("AUTORCC_OPTIONS", CM_NULLPTR);
     this->SetPropertyDefault("LINK_DEPENDS_NO_SHARED", CM_NULLPTR);
     this->SetPropertyDefault("LINK_INTERFACE_LIBRARIES", CM_NULLPTR);
