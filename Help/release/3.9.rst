@@ -167,6 +167,9 @@ Modules
   for each ``<TYPE>`` to replace the type name with the specified string
   whenever the package type is used in an output string by the module.
 
+* The :module:`FindCUDNN` module added to find ``cudnn`` library.
+  This module also features download functionality. 
+  
 * The :module:`FindDoxygen` module learned to control Doxygen behavior using
   CMake variables and generate documentation via the newly added
   :command:`doxygen_add_docs` function. The Doxygen input file (``Doxyfile``)
